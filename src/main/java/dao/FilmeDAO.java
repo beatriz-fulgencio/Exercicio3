@@ -1,6 +1,6 @@
 package dao;
 
-import model.Carro;
+import model.filme;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CarroDAO extends DAO {	
-	public CarroDAO() {
+public class FilmeDAO extends DAO {	
+	public FilmeDAO() {
 		super();
 		conectar();
 	}
@@ -22,12 +22,12 @@ public class CarroDAO extends DAO {
 	}
 	
 	
-	public boolean insert(Carro carro) {
+	public boolean insert(Filme filme) {
 		boolean status = false;
 		try {
-			String sql = "INSERT INTO carro (marca, preco, ano) "
-		               + "VALUES ('" + carro.getMarca() + "', "
-		               + carro.getPreco() + ", " + carro.getAno() + ", ?, ?);";
+			String sql = "INSERT INTO filme (genero, diretor, ano) "
+		               + "VALUES ('" + filme.getGenero() + "', "
+		               + filme.getDiretor() + ", " + filme.getAno() + ", ?, ?);";
 			PreparedStatement st = conexao.prepareStatement(sql);
 			st.executeUpdate();
 			st.close();
@@ -39,69 +39,69 @@ public class CarroDAO extends DAO {
 	}
 
 	
-	public Carro get(int modelo) {
-		Carro carro = null;
+	public Filme get(int tempo) {
+		Filme filme = null;
 		
 		try {
 			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			String sql = "SELECT * FROM produto WHERE id="+modelo;
+			String sql = "SELECT * FROM produto WHERE id="+tempo;
 			ResultSet rs = st.executeQuery(sql);	
 	        if(rs.next()){            
-	        	 carro = new Carro(rs.getInt("ano"), rs.getString("modelo"), rs.getString("marca"), rs.getDouble("preco"));
+	        	 filme = new Filme(rs.getInt("ano"), rs.getString("tempo"), rs.getString("genero"), rs.getDouble("diretor"));
 	        }
 	        st.close();
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
-		return carro;
+		return filme;
 	}
 	
 	
-	public List<Carro> get() {
+	public List<Filme> get() {
 		return get("");
 	}
 
 	
-	public List<Carro> getOrderByModelo() {
-		return get("modelo");		
+	public List<Filme> getOrderByTempo() {
+		return get("tempo");		
 	}
 	
 	
-	public List<Carro> getOrderByMarca() {
-		return get("marca");		
+	public List<Filme> getOrderByGenero() {
+		return get("genero");		
 	}
 	
 	
-	public List<Carro> getOrderByPreco() {
-		return get("preco");		
+	public List<Filme> getOrderByDiretor() {
+		return get("diretor");		
 	}
 	
 	
-	private List<Carro> get(String orderBy) {
-		List<Carro> carros = new ArrayList<Carro>();
+	private List<Filme> get(String orderBy) {
+		List<Filme> filmes = new ArrayList<Filme>();
 		
 		try {
 			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			String sql = "SELECT * FROM carro" + ((orderBy.trim().length() == 0) ? "" : (" ORDER BY " + orderBy));
+			String sql = "SELECT * FROM filme" + ((orderBy.trim().length() == 0) ? "" : (" ORDER BY " + orderBy));
 			ResultSet rs = st.executeQuery(sql);	           
 	        while(rs.next()) {	            	
-	        	Carro c = new Carro(rs.getInt("ano"), rs.getString("modelo"), rs.getString("marca"), rs.getDouble("preco"));
-	            carros.add(c);
+	        	Filme c = new Filme(rs.getInt("ano"), rs.getString("tempo"), rs.getString("genero"), rs.getDouble("diretor"));
+	            filmes.add(c);
 	        }
 	        st.close();
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
-		return  carros;
+		return  filmes;
 	}
 	
 	
-	public boolean update(Carro carro) {
+	public boolean update(Filme filme) {
 		boolean status = false;
 		try {  
-			String sql = "UPDATE produto SET marca = '" + carro.getMarca() + "', "
-					   + "preco = " + carro.getPreco() + ", " 
-					   + "ano = " + carro.getAno() + ",";
+			String sql = "UPDATE produto SET genero = '" + filme.getGenero() + "', "
+					   + "diretor = " + filme.getDiretor() + ", " 
+					   + "ano = " + filme.getAno() + ",";
 			PreparedStatement st = conexao.prepareStatement(sql);
 			st.executeUpdate();
 			st.close();
@@ -113,11 +113,11 @@ public class CarroDAO extends DAO {
 	}
 	
 	
-	public boolean delete(int modelo) {
+	public boolean delete(int tempo) {
 		boolean status = false;
 		try {  
 			Statement st = conexao.createStatement();
-			st.executeUpdate("DELETE FROM produto WHERE id = " + modelo);
+			st.executeUpdate("DELETE FROM produto WHERE id = " + tempo);
 			st.close();
 			status = true;
 		} catch (SQLException u) {  
