@@ -41,7 +41,7 @@ SET default_table_access_method = heap;
 CREATE TABLE public.produto (
     id integer DEFAULT nextval('public."id-produto"'::regclass) NOT NULL,
     descricao text,
-    preco double precision,
+     double precision,
     quantidade integer,
     datafabricacao timestamp without time zone,
     datavalidade date
